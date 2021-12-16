@@ -19,9 +19,11 @@ function CounterComponent({ counter, increment, decrement, edit }: CounterCompon
 
   return (
     <>
-      <Typography variant="overline" component="div">
-        {counter.name}
-      </Typography>
+      {counter.name && (
+        <Typography variant="overline" component="div">
+          {counter.name}
+        </Typography>
+      )}
       <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
         {decrement && (
           <IconButton onClick={() => decrement(counter.id)}>

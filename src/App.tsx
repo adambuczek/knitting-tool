@@ -28,7 +28,6 @@ interface CountersStatePayload extends Partial<Counter> {};
 const countersState: CountersState = {
   [GLOBAL_COUNTER_ID]: {
     id: GLOBAL_COUNTER_ID,
-    name: 'global',
     value: 1
   }
 };
@@ -112,19 +111,16 @@ function countersReducer(
       return state;
       
     case CountersStateActions.ADD_COUNTER:
-      if (action.payload?.name) {
-        const id = `${action.payload.name}-${Date.now()}`;
-        return {
-          ...state,
-          [id]: {
-            id,
-            name: action.payload.name,
-            value: 1,
-            max: action.payload.max
-          }
-        };
-      }
-      return state;
+      const id = `${action.payload.name}-${Date.now()}`;
+      return {
+        ...state,
+        [id]: {
+          id,
+          name: action.payload.name,
+          value: 1,
+          max: action.payload.max
+        }
+      };
 
     default:
       throw new Error("Wrong action type");

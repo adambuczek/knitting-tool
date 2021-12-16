@@ -2,7 +2,7 @@
 
 export interface Counter {
   id: string;
-  name: string;
+  name?: string;
   value: number;
   max?: number;
 }
