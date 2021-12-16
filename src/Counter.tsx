@@ -29,11 +29,11 @@ function CounterComponent({ name, max = 10 }: { name: string, max: number }) {
   return (
     <>
     <Box sx={{ display: 'flex', justifyContent: 'space-around' }} data-counter-id={id}>
-      <Button onClick={decrement}>-</Button>
+      <Button variant="outlined" onClick={decrement}>-</Button>
       <Typography variant="h1" component="div">
-        {counter}
+        {counter.toString().padStart(3, '0')}
       </Typography>
-      <Button onClick={increment}>+</Button>
+      <Button variant="outlined" onClick={increment}>+</Button>
     </Box>
     <Box sx={{ display: 'flex', justifyContent: 'space-around' }} data-counter-id={id}>
       <Fab color="primary" aria-label="add" size="small">
