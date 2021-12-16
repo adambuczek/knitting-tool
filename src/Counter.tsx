@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 
-import { Counter } from './counter-hook';
+import { Counter } from './counter-state';
 
 interface CounterComponentProps {
   counter: Counter;
