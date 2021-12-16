@@ -4,6 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+if ('wakeLock' in navigator) {
+  try {
+    //@ts-ignore
+    navigator.wakeLock.request('screen');
+    console.info('Wakelock active');
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
