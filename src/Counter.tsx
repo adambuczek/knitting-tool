@@ -2,44 +2,25 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Fab from '@mui/material/Fab';
-import AddLinkIcon from '@mui/icons-material/AddLink';
 
-function CounterComponent({ name, max = 10 }: { name: string, max: number }) {
-  const [counter, setCounter] = React.useState<number>(1);
+import { Counter } from './counter-hook';
 
-  const id = `${name}-${Date.now()}`;
+interface CounterComponentProps {
+  counter: Counter;
+  increment: (id: Counter['id']) => void;
+  decrement: (id: Counter['id']) => void;
+}
 
-  const increment = () => {
-    let newValue = counter + 1;
-    if (max) {
-      newValue = (counter >= max) ? 1 : newValue;
-    }
-    setCounter(newValue);
-  };
-
-  const decrement = () => {
-    let newValue = counter - 1;
-    if (max) {
-      newValue = (counter <= 1) ? max : newValue;
-    }
-    setCounter(newValue);
-  };
-
+function CounterComponent({ counter, increment, decrement }: CounterComponentProps) {
   return (
     <>
-    <Box sx={{ display: 'flex', justifyContent: 'space-around' }} data-counter-id={id}>
-      <Button variant="outlined" onClick={decrement}>-</Button>
-      <Typography variant="h1" component="div">
-        {counter.toString().padStart(3, '0')}
-      </Typography>
-      <Button variant="outlined" onClick={increment}>+</Button>
-    </Box>
-    <Box sx={{ display: 'flex', justifyContent: 'space-around' }} data-counter-id={id}>
-      <Fab color="primary" aria-label="add" size="small">
-        <AddLinkIcon />
-      </Fab>
-    </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button variant="outlined" onClick={() => decrement(counter.id)}>-</Button>
+        <Typography variant="h1" component="div">
+          {counter.value.toString().padStart(3, '0')}
+        </Typography>
+        <Button variant="outlined" onClick={() => increment(counter.id)}>+</Button>
+      </Box>
     </>
   );
 }
