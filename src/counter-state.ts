@@ -14,6 +14,7 @@ export enum CountersStateActions {
   DECREMENT_GLOBAL,
   SET_MAX,
   ADD_COUNTER,
+  EDIT_COUNTER,
   INCREMENT,
   DECREMENT
 }
@@ -118,6 +119,18 @@ function countersReducer(
           max: action.payload.max
         }
       };
+
+    case CountersStateActions.EDIT_COUNTER:
+      if (action.payload?.id && state[action.payload.id]) {
+        return {
+          ...state,
+          [action.payload.id]: {
+            ...state[action.payload.id],
+            ...action.payload
+          }
+        };
+      }
+      return state;
 
     default:
       throw new Error("Wrong action type");
