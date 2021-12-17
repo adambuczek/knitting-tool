@@ -61,6 +61,10 @@ function App() {
     dispatch({ type: CountersStateActions.ADD_COUNTER, payload: { name, max } });
   }
 
+  const removeCounter = (id: Counter['id']) => {
+    dispatch({ type: CountersStateActions.REMOVE_COUNTER, payload: { id } });
+  }
+
   const editCounter = (counter: Partial<Counter>) => {
     dispatch({ type: CountersStateActions.EDIT_COUNTER, payload: counter });
   }
@@ -123,6 +127,7 @@ function App() {
                 increment={(id) => increment(id)}
                 decrement={(id) => decrement(id)}
                 edit={(id) => openEditDialog(id)}
+                remove={(id) => removeCounter(id)}
               />
             );
           })}

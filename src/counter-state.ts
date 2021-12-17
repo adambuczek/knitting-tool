@@ -14,6 +14,7 @@ export enum CountersStateActions {
   DECREMENT_GLOBAL,
   SET_MAX,
   ADD_COUNTER,
+  REMOVE_COUNTER,
   EDIT_COUNTER,
   INCREMENT,
   DECREMENT
@@ -141,6 +142,17 @@ function countersReducer(
           max: action.payload.max
         }
       };
+      break;
+
+    case CountersStateActions.REMOVE_COUNTER:
+      if (action.payload?.id && state[action.payload.id]) {
+        newState = {
+          ...state
+        };
+        delete newState[action.payload.id];
+      } else {
+        newState = state;
+      }
       break;
 
     case CountersStateActions.EDIT_COUNTER:
