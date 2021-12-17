@@ -125,7 +125,7 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
                 <>
                   <List sx={{ mt:2 }} subheader="Labels">
                     {labelMap && Object.entries(labelMap).map(([index, label]) => (
-                      <ListItem secondaryAction={
+                      <ListItem key={index} secondaryAction={
                         <IconButton edge="end" aria-label="delete" onClick={() => removeLabel(index)}>
                           <CloseIcon color="error" />
                         </IconButton>
