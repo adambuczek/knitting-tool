@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
+
+import {
+  Typography,
+  IconButton,
+  Box,
+  CircularProgress,
+} from '@mui/material';
+
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Close';
@@ -16,6 +21,8 @@ interface CounterComponentProps {
   remove?: (id: Counter['id']) => void;
 }
 
+const RANGE_SEPARATOR = '-';
+
 function CounterComponent({ counter, increment, decrement, edit, remove }: CounterComponentProps) {
   const counterSize = !(increment && decrement) ? 'h1' : 'h3';
   const [viewRemoveButton, setViewRemoveButton] = useState(false);
@@ -24,6 +31,32 @@ function CounterComponent({ counter, increment, decrement, edit, remove }: Count
 
   const toggleRemoveButton = () => setViewRemoveButton(!viewRemoveButton);
 
+  const stringToRange = (value: string) => {
+    const [min, max] = value.split(RANGE_SEPARATOR).map(v => parseInt(v, 10));
+    return { min, max };
+  }
+
+  const getLabelForValue = (counter: Counter, value: number): string => {
+    const { labelMap } = counter;
+    if (labelMap) {
+      const exactLabel = [labelMap[value]];
+      const rangeLabels = Object.keys(labelMap)
+        .filter((key: string) => {
+          if (key.includes(RANGE_SEPARATOR)) {
+            const { min, max } = stringToRange(key);
+            return min <= value && value <= max;
+          }
+          return false;
+        })
+        .map(key => labelMap[key]);
+      const label = [...exactLabel, ...rangeLabels].filter(Boolean);
+      if (label.length) {
+        return label.join(', ');
+      }
+    }
+    return value.toString().padStart(3, '0');
+  }
+
   return (
     <>
       {counter.name && (
@@ -31,7 +64,7 @@ function CounterComponent({ counter, increment, decrement, edit, remove }: Count
           {counter.name}
         </Typography>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-around', my: 2 }}>
         {decrement && (
           <IconButton onClick={() => decrement(counter.id)}>
             <RemoveIcon />
@@ -40,14 +73,36 @@ function CounterComponent({ counter, increment, decrement, edit, remove }: Count
         <Box
           sx={{ position: 'relative' }}
           onClick={() => toggleRemoveButton()}
+          onDoubleClick={() => edit && edit(counter.id)}
         >
-          <Typography
-            variant={counterSize}
-            component="div"
-            onDoubleClick={() => edit && edit(counter.id)}
-          >
-            {counter.value.toString().padStart(3, '0')}
-          </Typography>
+          {counter.max && (
+            <Box sx={{
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              position: 'absolute',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: -1,
+             }}>
+              <CircularProgress
+                variant="determinate"
+                value={counter.value / counter.max * 100}
+                size={75}
+                thickness={1}
+              />
+            </Box>
+          )}
+          <Box sx={{ width: '25vw' }}>
+            <Typography
+              variant={counterSize}
+              component="div"
+            >
+              { getLabelForValue(counter, counter.value) }
+            </Typography>
+          </Box>
           {!isGlobal && viewRemoveButton && (
             <IconButton
               color="error"
@@ -55,7 +110,7 @@ function CounterComponent({ counter, increment, decrement, edit, remove }: Count
               sx={{
                 position: 'absolute',
                 top: '50%',
-                left: '110%',
+                left: '100%',
                 transform: 'translateY(-50%)',
               }}
               onClick={() => remove && remove(counter.id)}

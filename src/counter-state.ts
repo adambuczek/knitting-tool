@@ -3,6 +3,10 @@ export interface Counter {
   name?: string;
   value: number;
   max?: number;
+  /**
+   * label to display instead of value
+   */
+  labelMap?: Record<string, string>;
 }
 
 interface CountersState {
