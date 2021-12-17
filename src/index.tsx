@@ -5,13 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 if ('wakeLock' in navigator) {
-  try {
-    //@ts-ignore
-    navigator.wakeLock.request('screen');
-    console.info('Wakelock active');
-  } catch (err) {
-    console.error(err);
+  const requestWakeLock = async () => {
+    try {
+      // @ts-ignore
+      window.wakeLock = await navigator.wakeLock.request('screen');
+    } catch (err) {
+      // @ts-ignore
+      console.log(`${err.name}, ${err.message}`);
+    }
   }
+  requestWakeLock();
 }
 
 
