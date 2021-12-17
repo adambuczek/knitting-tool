@@ -1,37 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import TextField from '@mui/material/TextField';
-import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
+
+import LabelIcon from '@mui/icons-material/Label';
+import CloseIcon from '@mui/icons-material/Close';
+
 import { Counter } from './counter-state';
 
-interface ResponsiveDialogProps {
+import CustomTextField from './shared/components/CustomTextField';
+import AddLabelDialog from './AddLabelDialog';
+
+interface Props {
   isOpen: boolean;
   close: () => void;
   counter: Counter | null;
   save: (counter: Partial<Counter>) => void;
 }
 
-export default function ResponsiveDialog({ isOpen, close, counter, save }: ResponsiveDialogProps) {
+export default function CounterEditDialog({ isOpen, close, counter, save }: Props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const [name, setName] = useState('');
   const [max, setMax] = useState('');
   const [value, setValue] = useState('');
+  const [labelMap, setLabelMap] = useState<Counter['labelMap']>({});
+  const [labelCount, setLabelCount] = useState(0);
+
+  const [addLabelDialogOpen, setAddLabelDialogOpen] = useState(false);
+
 
   useEffect(() => {
     if (counter) {
       setName(counter.name || '');
       setMax(counter.max ? counter.max.toString() : '');
       setValue(counter.value.toString());
+      setLabelMap(counter.labelMap || {});
     }
   }, [counter]);
+
+  useEffect(() => {
+    setLabelCount(labelMap ? Object.keys(labelMap).length : 0);
+  }, [labelMap]);
 
   const handleClose = () => {
     close();
@@ -44,9 +67,18 @@ export default function ResponsiveDialog({ isOpen, close, counter, save }: Respo
         name,
         value: parseInt(value, 10),
         max: parseInt(max, 10),
+        labelMap,
       });
     }
     close();
+  };
+
+  const removeLabel = (index: string) => {
+    setLabelMap((labelMap) => {
+      const newLabelMap = { ...labelMap };
+      delete newLabelMap[index];
+      return newLabelMap;
+    });
   };
 
   const fields = [
@@ -79,41 +111,48 @@ export default function ResponsiveDialog({ isOpen, close, counter, save }: Respo
         fullScreen={fullScreen}
         open={isOpen}
         onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
       >
         {counter && (
           <>
-          <DialogTitle id="responsive-dialog-title">
-            {"Edit Counter"}
-          </DialogTitle>
-          <DialogContent>
-            {/* <DialogContentText>
-              Let Google help apps determine location. This means sending anonymous
-              location data to Google, even when no apps are running.
-            </DialogContentText> */}
-            {fields.map(({ name, label, value, type, onChange }) => (
-              <TextField
-                key={name}
-                autoFocus
-                margin="dense"
-                id={name}
-                label={label}
-                type={type}
-                fullWidth
-                value={value}
-                variant="standard"
-                onChange={onChange}
+            <DialogTitle>{"Edit Counter"}</DialogTitle>
+            <DialogContent>
+              {fields.map(({ name, label, value, type, onChange }) => (
+                <CustomTextField key={name} label={label} type={type}
+                  value={value} onChange={onChange}
+                />
+              ))}
+              {labelCount ? (
+                <>
+                  <List sx={{ mt:2 }} subheader="Labels">
+                    {labelMap && Object.entries(labelMap).map(([index, label]) => (
+                      <ListItem secondaryAction={
+                        <IconButton edge="end" aria-label="delete" onClick={() => removeLabel(index)}>
+                          <CloseIcon color="error" />
+                        </IconButton>
+                      }>
+                        <ListItemIcon>
+                          <LabelIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={`${index}`} />
+                        <ListItemText primary={`${label}`} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </>
+              ) : ''}
+              <Button sx={{ mt:2 }} onClick={() => setAddLabelDialogOpen(true)}>add label</Button>
+              <AddLabelDialog
+                isOpen={addLabelDialogOpen}
+                close={() => setAddLabelDialogOpen(false)}
+                save={(label) => {
+                  setLabelMap({ ...labelMap, ...label });
+                }}
               />
-            ))}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>
-              close
-            </Button>
-            <Button autoFocus onClick={handleSave}>
-              Save
-            </Button>
-          </DialogActions>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>close</Button>
+              <Button autoFocus onClick={handleSave}>save</Button>
+            </DialogActions>
           </>
         )}
       </Dialog>

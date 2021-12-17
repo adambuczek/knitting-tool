@@ -40,11 +40,11 @@ function CounterComponent({ counter, increment, decrement, edit, remove }: Count
         <Box
           sx={{ position: 'relative' }}
           onClick={() => toggleRemoveButton()}
+          onDoubleClick={() => edit && edit(counter.id)}
         >
           <Typography
             variant={counterSize}
             component="div"
-            onDoubleClick={() => edit && edit(counter.id)}
           >
             {counter.value.toString().padStart(3, '0')}
           </Typography>
