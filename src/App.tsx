@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddLinkIcon from '@mui/icons-material/AddLink';
@@ -15,18 +15,34 @@ import {
 
 import CounterComponent from './Counter';
 import CounterEditDialog from './CounterEditDialog';
+import Stopwatch from './Stopwatch';
 
 function App() {
   const [state, dispatch] = useReducer(countersReducer, countersState);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [activeCounter, setActiveCounter] = useState<Counter|null>(null);
+  const [time, setTime] = React.useState(0);
 
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setTime(t => t + 1);
+    }, 1000);
+    return function cleanup() {
+      clearInterval(timerId);
+    };
+  }, []);
+
+  const resetTime = () => {
+    setTime(0);
+  };
 
   const incrementGlobal = () => {
+    resetTime();
     dispatch({ type: CountersStateActions.INCREMENT_GLOBAL });
   };
 
   const decrementGlobal = () => {
+    resetTime();
     dispatch({ type: CountersStateActions.DECREMENT_GLOBAL });
   };
 
@@ -60,6 +76,7 @@ function App() {
   return (
     <>  
       <Box sx={{ textAlign: 'center', mt: 5 }}>
+        <Stopwatch time={time} />
         <CounterComponent
           counter={state[GLOBAL_COUNTER_ID]}
           edit={(id) => openEditDialog(id)}
