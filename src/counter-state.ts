@@ -14,6 +14,7 @@ export enum CountersStateActions {
   DECREMENT_GLOBAL,
   SET_MAX,
   ADD_COUNTER,
+  REMOVE_COUNTER,
   EDIT_COUNTER,
   INCREMENT,
   DECREMENT
@@ -49,9 +50,13 @@ function countersReducer(
     const { max, value } = counter;
     let newValue = value + amount;
     if (max) {
-      newValue = (value >= max) ? 1 : newValue;
-      newValue = (value < 1) ? max : newValue;
+      newValue = amount > 0 ? (value >= max) ? 1 : newValue : (value <= 1) ? max : newValue;
     }
+
+    if (newValue < 1) {
+      newValue = 1;
+    }
+
     return { ...counter, value: newValue };
   };
 
@@ -137,6 +142,17 @@ function countersReducer(
           max: action.payload.max
         }
       };
+      break;
+
+    case CountersStateActions.REMOVE_COUNTER:
+      if (action.payload?.id && state[action.payload.id]) {
+        newState = {
+          ...state
+        };
+        delete newState[action.payload.id];
+      } else {
+        newState = state;
+      }
       break;
 
     case CountersStateActions.EDIT_COUNTER:
