@@ -95,10 +95,13 @@ function CounterComponent({ counter, increment, decrement, edit, remove }: Count
               />
             </Box>
           )}
-          <Box sx={{ width: '25vw' }}>
+          <Box sx={{ width: '66vw' }}>
             <Typography
               variant={counterSize}
               component="div"
+              sx={{
+                textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
+              }}
             >
               { getLabelForValue(counter, counter.value) }
             </Typography>
