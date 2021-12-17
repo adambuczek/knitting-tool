@@ -49,9 +49,13 @@ function countersReducer(
     const { max, value } = counter;
     let newValue = value + amount;
     if (max) {
-      newValue = (value >= max) ? 1 : newValue;
-      newValue = (value < 1) ? max : newValue;
+      newValue = amount > 0 ? (value >= max) ? 1 : newValue : (value <= 1) ? max : newValue;
     }
+
+    if (newValue < 1) {
+      newValue = 1;
+    }
+
     return { ...counter, value: newValue };
   };
 
