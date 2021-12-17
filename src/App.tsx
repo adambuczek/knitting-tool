@@ -106,7 +106,7 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Container maxWidth="sm">
-        <Box sx={{ textAlign: 'center', mt: 5 }}>
+        <Box sx={{ textAlign: 'center', mt: 5, mb: 10 }}>
           <Stopwatch time={time} />
           <CounterComponent
             counter={state[GLOBAL_COUNTER_ID]}
@@ -135,7 +135,7 @@ function App() {
         />
         <Box sx={{
           pb: 2,
-          position: 'absolute',
+          position: 'fixed',
           bottom: 0,
           right: 0,
           left: 0,
