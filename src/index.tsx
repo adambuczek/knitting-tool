@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -20,6 +19,10 @@ if ('wakeLock' in navigator) {
 
 ReactDOM.render(
   <React.StrictMode>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400&display=swap"
+    />
     <App />
   </React.StrictMode>,
   document.getElementById('root')
