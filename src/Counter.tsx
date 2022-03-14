@@ -4,7 +4,6 @@ import {
   Typography,
   IconButton,
   Box,
-  CircularProgress,
 } from '@mui/material';
 
 import RemoveIcon from '@mui/icons-material/Remove';

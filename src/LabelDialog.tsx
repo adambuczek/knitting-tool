@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
@@ -16,14 +16,25 @@ interface Props {
   isOpen: boolean;
   close: () => void;
   save: (label: Counter['labelMap']) => void;
+  initialIndex?: string;
+  initialLabel?: string;
 }
 
-export default function AddLabelDialog({ isOpen, close, save }: Props) {
+export default function LabelDialog({ isOpen, close, save, initialIndex, initialLabel }: Props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const [index, setIndex] = useState('');
   const [label, setLabel] = useState('');
+
+  useEffect(() => {
+    if (initialIndex) {
+      setIndex(initialIndex);
+    }
+    if (initialLabel) {
+      setLabel(initialLabel);
+    }
+  }, [initialIndex, initialLabel]);
 
   const handleClose = () => {
     setIndex('');
