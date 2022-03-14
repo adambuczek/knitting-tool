@@ -11,11 +11,9 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
 } from '@mui/material';
 
-import LabelIcon from '@mui/icons-material/Label';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -168,8 +166,8 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
                           </IconButton>
                         </>
                       }>
-                        <ListItemText primary={`${index}`} />
-                        <ListItemText primary={`${label}`} />
+                        <ListItemText primary={`${index}`} sx={{ flex: '0 1 2rem', mr:2 }}/>
+                        <ListItemText primary={`${label}`} sx={{ flex: '3 3 auto' }} />
                       </ListItem>
                     ))}
                   </List>
