@@ -18,6 +18,7 @@ import {
 import LabelIcon from '@mui/icons-material/Label';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import { Counter } from './counter-state';
 
@@ -79,7 +80,6 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
 
   const editLabel = (index: string) => {
     const label = labelMap?.[index];
-    console.log(label, index);
     if (label) {
       setInitialIndex(index);
       setInitialLabel(label);
@@ -93,6 +93,16 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
       delete newLabelMap[index];
       return newLabelMap;
     });
+  };
+
+  const copyLabel = (index: string) => {
+    const label = labelMap?.[index];
+    const newIndex = `_${index}`;
+    if (label) {
+      setLabelMap((labelMap) => {
+        return { ...labelMap, [newIndex]: label };
+      });
+    };
   };
 
   const closeLabelDialog = () => {
@@ -147,6 +157,9 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
                     {labelMap && Object.entries(labelMap).map(([index, label]) => (
                       <ListItem key={index} secondaryAction={
                         <>  
+                          <IconButton onClick={() => copyLabel(index)}>
+                            <ContentCopyIcon />
+                          </IconButton>
                           <IconButton onClick={() => editLabel(index)}>
                             <EditIcon />
                           </IconButton>
@@ -155,9 +168,6 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
                           </IconButton>
                         </>
                       }>
-                        <ListItemIcon>
-                          <LabelIcon />
-                        </ListItemIcon>
                         <ListItemText primary={`${index}`} />
                         <ListItemText primary={`${label}`} />
                       </ListItem>
