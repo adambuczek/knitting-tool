@@ -11,17 +11,17 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
 } from '@mui/material';
 
-import LabelIcon from '@mui/icons-material/Label';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import { Counter } from './counter-state';
 
 import CustomTextField from './shared/components/CustomTextField';
-import AddLabelDialog from './AddLabelDialog';
+import LabelDialog from './LabelDialog';
 
 interface Props {
   isOpen: boolean;
@@ -41,6 +41,9 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
   const [labelCount, setLabelCount] = useState(0);
 
   const [addLabelDialogOpen, setAddLabelDialogOpen] = useState(false);
+
+  const [initialIndex, setInitialIndex] = useState('');
+  const [initialLabel, setInitialLabel] = useState('');
 
 
   useEffect(() => {
@@ -73,12 +76,37 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
     close();
   };
 
+  const editLabel = (index: string) => {
+    const label = labelMap?.[index];
+    if (label) {
+      setInitialIndex(index);
+      setInitialLabel(label);
+      setAddLabelDialogOpen(true);
+    }
+  }
+
   const removeLabel = (index: string) => {
     setLabelMap((labelMap) => {
       const newLabelMap = { ...labelMap };
       delete newLabelMap[index];
       return newLabelMap;
     });
+  };
+
+  const copyLabel = (index: string) => {
+    const label = labelMap?.[index];
+    const newIndex = `_${index}`;
+    if (label) {
+      setLabelMap((labelMap) => {
+        return { ...labelMap, [newIndex]: label };
+      });
+    };
+  };
+
+  const closeLabelDialog = () => {
+    setAddLabelDialogOpen(false);
+    setInitialIndex('');
+    setInitialLabel('');
   };
 
   const fields = [
@@ -126,27 +154,34 @@ export default function CounterEditDialog({ isOpen, close, counter, save }: Prop
                   <List sx={{ mt:2 }} subheader="Labels">
                     {labelMap && Object.entries(labelMap).map(([index, label]) => (
                       <ListItem key={index} secondaryAction={
-                        <IconButton edge="end" aria-label="delete" onClick={() => removeLabel(index)}>
-                          <CloseIcon color="error" />
-                        </IconButton>
+                        <>  
+                          <IconButton onClick={() => copyLabel(index)}>
+                            <ContentCopyIcon />
+                          </IconButton>
+                          <IconButton onClick={() => editLabel(index)}>
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton edge="end" aria-label="delete" onClick={() => removeLabel(index)}>
+                            <CloseIcon color="error" />
+                          </IconButton>
+                        </>
                       }>
-                        <ListItemIcon>
-                          <LabelIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={`${index}`} />
-                        <ListItemText primary={`${label}`} />
+                        <ListItemText primary={`${index}`} sx={{ flex: '0 1 2rem', mr:2 }}/>
+                        <ListItemText primary={`${label}`} sx={{ flex: '3 3 auto' }} />
                       </ListItem>
                     ))}
                   </List>
                 </>
               ) : ''}
               <Button sx={{ mt:2 }} onClick={() => setAddLabelDialogOpen(true)}>add label</Button>
-              <AddLabelDialog
+              <LabelDialog
                 isOpen={addLabelDialogOpen}
-                close={() => setAddLabelDialogOpen(false)}
+                close={() => closeLabelDialog()}
                 save={(label) => {
                   setLabelMap({ ...labelMap, ...label });
                 }}
+                initialIndex={initialIndex}
+                initialLabel={initialLabel}
               />
             </DialogContent>
             <DialogActions>

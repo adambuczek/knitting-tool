@@ -4,7 +4,6 @@ import {
   Typography,
   IconButton,
   Box,
-  CircularProgress,
 } from '@mui/material';
 
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -24,7 +23,7 @@ interface CounterComponentProps {
 const RANGE_SEPARATOR = '-';
 
 function CounterComponent({ counter, increment, decrement, edit, remove }: CounterComponentProps) {
-  const counterSize = !(increment && decrement) ? 'h1' : 'h3';
+  const counterSize = !(increment && decrement) ? 'h1' : 'h5';
   const [viewRemoveButton, setViewRemoveButton] = useState(false);
 
   const isGlobal = counter.id === GLOBAL_COUNTER_ID;
@@ -79,9 +78,6 @@ function CounterComponent({ counter, increment, decrement, edit, remove }: Count
             <Typography
               variant={counterSize}
               component="div"
-              sx={{
-                textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
-              }}
             >
               { getLabelForValue(counter, counter.value) }
             </Typography>
