@@ -96,6 +96,9 @@ function App() {
         warning: {
           main: '#ffab40',
         },
+        background: {
+          default: '#111111',
+        },
       },
       typography: {
         fontWeightLight: 100,
